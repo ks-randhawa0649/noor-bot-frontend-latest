@@ -4,69 +4,81 @@ import ChatBot from "react-chatbotify";
 import {FetchResponse,UploadPDF} from './noorBotAI';
 import './noorBot.css';
 
-const settings = {
-    isOpen: true,
-    general: {
-      primaryColor: '#42b0c5',
-      secondaryColor: '#491d8d',
-      fontFamily: 'Arial, sans-serif',
-      embedded: true,
-      showFooter: true,
-      height: "6000px",
+const NoorBot = () => {
+  const settings = {
+      isOpen: true,
+      general: {
+        primaryColor: '#42b0c5',
+        secondaryColor: '#491d8d',
+        fontFamily: 'Arial, sans-serif',
+        embedded: true,
+        showFooter: true,
+        height: "6000px",
+      },
+      header: {
+        title: 'NoorBot'
+      },
+      botBubble: {
+        simStream: true
+      },
+      fileAttachment: {
+        enabled: true,           
+        accept: ".pdf" 
+      }
+    };
+
+  const bodyStyle = {
+    display: "flex", 
+    justifyContent: "center",
+    alignItems: "center", 
+    backgroundColor : '#B0E0E6',
+    height:'100vh',
+    width:'100vw',
+  }
+
+  const runNoorAI = async(params) => {
+    if(params.files!=null && params.files[0]!=null){
+      const file = params.files[0];
+      return await UploadPDF(file);
+    }
+    else if(params.userInput!=null){
+      const prompt = params.userInput;
+      return await FetchResponse(prompt);
+    }
+  }
+
+  const flow = {
+    start:{
+      message: "Hi, I'm NoorBot.....what is your query?",
+      file: async(params) => {
+        const response = await runNoorAI(params);
+      },
+      path: "fileUpload",
     },
-    header: {
-      title: 'NoorBot'
+    fileUpload:{
+      message:() => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve('File Processed Successfully');
+          }, 10000);
+        });
+      },
+      path:'model'
     },
-    botBubble: {
-      simStream: true
-    },
-    fileAttachment: {
-      enabled: true,           
-      accept: ".pdf" 
+    model:{
+      message: async(params) => {
+        return await runNoorAI(params)
+      },
+      path: "model"
     }
   };
 
-const bodyStyle = {
-  display: "flex", 
-  justifyContent: "center",
-  alignItems: "center", 
-  backgroundColor : '#B0E0E6',
-  height:'100vh',
-  width:'100vw',
-}
+  return(
+  <div style={bodyStyle}>
+      <ChatBot flow = {flow} settings={settings} />
+  </div>
+  );
 
-const runNoorAI = async(params) => {
-var response = null;
-if(params.files!=null && params.files[0]!=null){
-  const file = params.files[0];
-  response = await UploadPDF(file);
-}
-else if(params.userInput!=null){
-  const prompt = params.userInput;
-  response = await FetchResponse(prompt);
-}
-return response;
-}
-
-const flow = {
-  start:{
-    message: "Hi, I'm NoorBot.....what is your query?",
-    path: "model",
-    file: async(params) => {return await runNoorAI(params)},
-  },
-  model:{
-    message: async(params) => {return await runNoorAI(params)},
-    path: "model"
-  }
-};
-
-const NoorBot = () => {
-    return(
-    <div style={bodyStyle}>
-        <ChatBot flow = {flow} settings={settings} />
-    </div>
-
-    );
 };  
 
 export default NoorBot;

@@ -9,9 +9,9 @@ import axios from "axios";
                 'Content-Type': 'application/json'
             }
         };
-        await axios.post(`https://99pu1c9eml.execute-api.ca-central-1.amazonaws.com/query`, {'query': query}, axiosConfig)
+        await axios.post(`https://rag-project-chatbot-v1-2-5fa4f2cc151f.herokuapp.com/api/query`, {'query': query}, axiosConfig)
             .then(res => {
-                response = res.data.answer;
+                response = res.data.response;
             })
             .catch(error =>{
                 if (error.response) {
@@ -38,12 +38,15 @@ import axios from "axios";
             response = 'Please upload a file to proceed';
         let axiosConfig = {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             }
         };
-        await axios.post(`https://99pu1c9eml.execute-api.ca-central-1.amazonaws.com/upload`, {'files': {'file':file}}, axiosConfig)
+        const formData = new FormData();
+        formData.append('file', file)
+        await axios.post(`https://rag-project-chatbot-v1-2-5fa4f2cc151f.herokuapp.com/api/upload`, formData, axiosConfig)
             .then(res => {
-                response = res.data.answer;
+                response = res.data.message;
+                return response;
             })
             .catch(error =>{
                 if (error.response) {
