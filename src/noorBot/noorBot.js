@@ -49,7 +49,7 @@ const NoorBot = () => {
 
   const flow = {
     start:{
-      message: "Hi, I'm NoorBot.....what is your query?",
+      message: "مرحبا , اسمي نور ... كيف يمكنني مساعدتك?",
       file: async(params) => {
         const response = await runNoorAI(params);
       },
