@@ -9,7 +9,7 @@ import axios from "axios";
                 'Content-Type': 'application/json'
             }
         };
-        await axios.post(`https://rag-project-chatbot-v1-2-5fa4f2cc151f.herokuapp.com/api/query`, {'query': query}, axiosConfig)
+        await axios.post(`https://rag-project-chatbot-v1-3-63ee4b81983b.herokuapp.com/api/query`, {'query': query}, axiosConfig)
             .then(res => {
                 response = res.data.response;
             })
@@ -43,7 +43,7 @@ import axios from "axios";
         };
         const formData = new FormData();
         formData.append('file', file)
-        await axios.post(`https://rag-project-chatbot-v1-2-5fa4f2cc151f.herokuapp.com/api/upload`, formData, axiosConfig)
+        await axios.post(`https://rag-project-chatbot-v1-3-63ee4b81983b.herokuapp.com/api/upload`, formData, axiosConfig)
             .then(res => {
                 response = res.data.message;
                 return response;
