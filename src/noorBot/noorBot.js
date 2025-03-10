@@ -37,34 +37,37 @@ const NoorBot = () => {
   }
 
   const runNoorAI = async(params) => {
-    if(params.files!=null && params.files[0]!=null){
-      const file = params.files[0];
-      return await UploadPDF(file);
-    }
-    else if(params.userInput!=null){
+    // if(params.files!=null && params.files[0]!=null){
+    //   const file = params.files[0];
+    //   return await UploadPDF(file);
+    // }
+    if(params.userInput!=null){
       const prompt = params.userInput;
       return await FetchResponse(prompt);
+    }
+    else{
+      return "Please type a query to continue";
     }
   }
 
   const flow = {
     start:{
       message: "مرحبا , اسمي نور ... كيف يمكنني مساعدتك?",
-      file: async(params) => {
-        const response = await runNoorAI(params);
-      },
-      path: "fileUpload",
+      // file: async(params) => {
+      //   const response = await runNoorAI(params);
+      // },
+      path: "model",
     },
-    fileUpload:{
-      message:() => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve('File Processed Successfully');
-          }, 10000);
-        });
-      },
-      path:'model'
-    },
+    // fileUpload:{
+    //   message:() => {
+    //     return new Promise((resolve) => {
+    //       setTimeout(() => {
+    //         resolve('File Processed Successfully');
+    //       }, 10000);
+    //     });
+    //   },
+    //   path:'model'
+    // },
     model:{
       message: async(params) => {
         return await runNoorAI(params)
